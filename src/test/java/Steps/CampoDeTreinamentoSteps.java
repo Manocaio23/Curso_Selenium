@@ -2,7 +2,10 @@ package Steps;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-
+import java.io.File;
+import java.io.IOException;
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.TakesScreenshot;
 import PageObjects.CampoTreinamentoPage;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
@@ -71,13 +74,17 @@ public class CampoDeTreinamentoSteps {
 	   mc.ValidaçãoCadastro();
 	   mc.Frames();
 	  // mc.abriPopup();
-	   
-	   
+	   mc.testaPrimeFaces();
+	   mc.testaPrimeFacesSelect();
+	   mc.PrimeFacesAjax();
 	}
 	
 	@After
-	public void fecha() {
-		mc.fechaNavegador();
+	public void fecha() throws IOException {
+		//mc.tiraPrint();
+		//mc.OutroPrint();
+		mc.PrintY();
+		//mc.fechaNavegador();
 	}
 	
 }

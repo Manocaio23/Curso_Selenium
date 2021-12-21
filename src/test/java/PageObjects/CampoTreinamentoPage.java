@@ -1,14 +1,29 @@
 package PageObjects;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import javax.imageio.ImageIO;
+
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import junit.framework.Assert;
+import ru.yandex.qatools.ashot.AShot;
+import ru.yandex.qatools.ashot.Screenshot;
+import ru.yandex.qatools.ashot.shooting.ShootingStrategies;
 
 public class CampoTreinamentoPage {
 
@@ -178,6 +193,7 @@ public class CampoTreinamentoPage {
 		Assert.assertEquals("Frame OK!", msg);
 		alert.accept();
 		
+		
 	}
 	
 	public void abriPopup() {
@@ -189,7 +205,66 @@ public class CampoTreinamentoPage {
 		
 	}
 	
+	public void testaPrimeFaces() {
+		driver.get("https://www.primefaces.org/showcase/ui/input/oneRadio.xhtml?jfwid=d8305");
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		driver.findElement(By.xpath("//*[@id=\"j_idt305:console\"]/tbody/tr/td[1]/div/div[2]/span")).click();
+		driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+	}
+	
+	public void testaPrimeFacesSelect() {
+		driver.get("https://www.primefaces.org/showcase/ui/input/oneMenu.xhtml?jfwid=78105");
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		driver.findElement(By.xpath("//*[@id=\"j_idt304:option_label\"]")).click();
+		driver.findElement(By.xpath("//*[@id=\"j_idt304:option_1\"]")).click();
+		driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+		
+	}
+	
+	public void PrimeFacesAjax() {
+		driver.get("https://www.primefaces.org/showcase/ui/ajax/basic.xhtml?jfwid=20cd7");
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		driver.findElement(By.id("j_idt304:name")).sendKeys("Caio");
+		driver.findElement(By.xpath("//*[@id=\"j_idt304:j_idt308\"]/span")).click();
+		WebDriverWait wait= new WebDriverWait(driver, 10);
+		wait.until(ExpectedConditions.textToBe(By.id("j_idt304:display"), "Caio"));
+		Assert.assertEquals("Caio", driver.findElement(By.id("j_idt304:display")).getText());
+		
+		
+	}
+	
+	public void tiraPrint() throws IOException {
+		TakesScreenshot ts = (TakesScreenshot)driver;
+		File file = ts.getScreenshotAs(OutputType.FILE);
+		FileUtils.copyFile(file, new File("./Screenshot/img.png"));
+		
+	}
+	
+	public void OutroPrint() throws IOException {
+		
+		 
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss z");
+		Date hj=new Date();
+		System.out.println(sdf.format(hj));
+		String screenshotfilename = hj.toString();
+		
+		File screenshotFile=((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+		FileUtils.copyFile(screenshotFile, new File("./Screenshot/"+screenshotfilename+".png"));
+	
+	}
+	
+	public void PrintY() throws IOException {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss z");
+		Date hj=new Date();
+		String dataH = sdf.format(hj);
+		String data =dataH.toString().replace(" ","-" ).replace(":", "-");
+		Screenshot print= new AShot().shootingStrategy(ShootingStrategies.viewportPasting(500)).takeScreenshot(driver);
+		ImageIO.write(print.getImage(), "PNG", new File("./Screenshot/"+data+".png"));
+	}
+	
+
 	public void fechaNavegador() {
+		
 		driver.quit();
 	}
 	}
